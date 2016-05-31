@@ -503,11 +503,13 @@ int RocksDBStore::get(
   assert(out && (out->length() == 0));
   utime_t start = ceph_clock_now(g_ceph_context);
   int r = 0;
-  KeyValueDB::Iterator it = get_iterator(prefix);
-  it->lower_bound(key);
-  if (it->valid() && it->key() == key) {
-    out->append(it->value_as_ptr());
-  } else {
+  rocksdb::ReadOptions options;
+  std::string value;
+  std::string bound = combine_strings(prefix, key);
+  auto status = db->Get(options, bound, &value);
+  if (status.ok()) {
+    out->append(value);
+  } else if (!status.IsNotFound()) {
     r = -ENOENT;
   }
   utime_t lat = ceph_clock_now(g_ceph_context) - start;
