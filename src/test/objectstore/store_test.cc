@@ -1137,7 +1137,8 @@ TEST_P(StoreTest, BluestoreStatFSTest) {
     ASSERT_EQ(r, 0);
     ASSERT_EQ( 0u, statfs.allocated);
     ASSERT_EQ( 0u, statfs.stored);
-    ASSERT_EQ(g_conf->bluestore_block_size, statfs.total);
+    ASSERT_EQ(0x1000u, statfs.bsize);
+    ASSERT_EQ(g_conf->bluestore_block_size / 0x1000, statfs.blocks);
     ASSERT_TRUE(statfs.available > 0u && statfs.available < g_conf->bluestore_block_size);
     //force fsck
     EXPECT_EQ(store->umount(), 0);

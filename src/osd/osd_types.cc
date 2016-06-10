@@ -5583,8 +5583,10 @@ bool store_statfs_t::operator==(const store_statfs_t& other) const
 
 void store_statfs_t::dump(Formatter *f) const
 {
-  f->dump_int("total", total);
   f->dump_int("available", available);
+
+  f->dump_int("blocks", blocks);
+  f->dump_int("bsize", bsize);
 
   f->dump_int("allocated", allocated);
   f->dump_int("stored", stored);
@@ -5596,8 +5598,9 @@ void store_statfs_t::dump(Formatter *f) const
 ostream& operator<<(ostream& out, const store_statfs_t &s)
 {
   out << std::hex
-      << " store_statfs(0x" << s.available
-      << "/0x"  << s.total
+      << " store_statfs(0x" << s.blocks
+      << "*0x"  << s.bsize
+      << "/0x"  << s.available
       << ", stored 0x" << s.stored
       << "/0x"  << s.allocated
       << ", compress 0x" << s.compressed

@@ -2955,7 +2955,9 @@ int BlueStore::statfs(struct store_statfs_t *buf)
     bluefs_len += p.get_len();
 
   buf->reset();
-  buf->total = bdev->get_size();
+
+  buf->blocks = bdev->get_size() / block_size;
+  buf->bsize = block_size;
   buf->available = (alloc->get_free() - bluefs_len);
 
   bufferlist bl;
